@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/03 13:40:06 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:04:07 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 
-# define FORK		"has taking a fork"
+# define FORK		"has taken a fork"
 # define EAT		"is eating"
 # define SLEEP		"is sleeping"
 # define THINK 		"is thinking"
@@ -40,12 +40,13 @@ typedef struct s_philo
 {
 	int				id;
 	long			bday;
+	long			last_meal_time;
 	int				has_fork;
-	void			*left;
-	void			*right;
+	void			*left_fork;
+	void			*right_fork;
 	t_table			*table;
 	pthread_t		thread;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	mutex_fork;
 }				 t_philo;
 
 

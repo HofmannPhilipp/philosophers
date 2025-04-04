@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 10:52:26 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/03 13:13:44 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:04:15 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_philo	*create_philo(int id, t_table *table)
 
 	philo = malloc(sizeof(t_philo));
 	memset(philo, 0, sizeof(t_philo));
-	pthread_mutex_init(&philo->mutex, NULL);
+	pthread_mutex_init(&philo->mutex_fork, NULL);
 	philo->id = id;
 	philo->table = table;
 	return (philo);

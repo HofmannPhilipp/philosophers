@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:05:21 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/03 13:43:04 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:51:41 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*routine(void *arg)
 	{
 		if (philo->id % 2 == 0)
 		{
-			pthread_mutex_lock(&philo->mutex);
+		
 			
 		}
 		if (philo->has_fork)
@@ -70,6 +70,12 @@ void	philo_loop(t_philo **philos)
 	while (philos[i] != NULL)
 	{
 		pthread_join(philos[i]->thread, NULL);
+		i++;
+	}
+	i = 0;
+	while (philos[i] != NULL)
+	{
+		pthread_mutex_destroy(&philos[i]->mutex);
 		i++;
 	}
 }
