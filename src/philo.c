@@ -6,63 +6,48 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:05:21 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/04 10:51:41 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/07 18:03:50 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*monitor(void *arg)
-{
-	
-}
-
 void	*routine(void *arg)
 {
 	t_philo	*philo;
-	int		meals_eaten;
 
 	philo = (t_philo *)arg;
-	meals_eaten = 0;
 	philo->bday = get_bday();
-	while (meals_eaten < philo->table->num_meals && get_curr_time(philo->bday) < philo->table->die_time);
+	philo->last_meal_time = get_bday();
+	pthread_mutex_lock(&philo->table->print_mutex);
+	pthread_mutex_unlock(&philo->table->print_mutex);
+	while (philo->meals_eaten < philo->table->num_meals && get_curr_time(philo->last_meal_time) < philo->table->die_time)
 	{
-		if (philo->id % 2 == 0)
-		{
-		
-			
-		}
-		if (philo->has_fork)
-		{
-			usleep(philo->table->eat_time);
-			philo->bday = get_bday();
-			meals_eaten ++;
-			usleep(philo->table->sleep_time);
-		}
+		thinking(philo);
+		pthread_mutex_lock(&philo->table->waiter_mutex);
+		pthread_mutex_lock(&philo->l_fork_mutex);
+		pthread_mutex_lock(philo->r_fork_mutex);
+		pthread_mutex_unlock(&philo->table->waiter_mutex);
+		eating(philo);
+		pthread_mutex_unlock(&philo->l_fork_mutex);
+		pthread_mutex_unlock(philo->r_fork_mutex);
+		sleeping(philo);
 	}
-	if (meals_eaten < philo->table->num_meals)
+	if (philo->meals_eaten < philo->table->num_meals)
+	{
 		print_msg(philo->id, get_curr_time(philo->bday), DEAD);
-	// printf("id: %d fork: %p\n", philo->id, &philo->mutex);
-	// if (philo->id % 2 == 0)
-	// {
-	// 	print_msg(philo->id, get_curr_time() - philo->bday, FORK);
-	// }
-	
+		exit(EXIT_FAILURE);
+	}
 	return (NULL);
 }
 
 void	philo_loop(t_philo **philos)
 {
-	pthread_t	waiter;
 	int	i;
 
 	i = 0;
-	// print_arr(philos);
-	pthread_create(&monitor,NULL, &monitor, philos[i]);
-	
 	while(philos[i] != NULL)
 	{
-		// printf("%d\n", i);
 		pthread_create(&philos[i]->thread, NULL, &routine, philos[i]);
 		i++;
 	}
@@ -75,7 +60,7 @@ void	philo_loop(t_philo **philos)
 	i = 0;
 	while (philos[i] != NULL)
 	{
-		pthread_mutex_destroy(&philos[i]->mutex);
+		pthread_mutex_destroy(&philos[i]->l_fork_mutex);
 		i++;
 	}
 }

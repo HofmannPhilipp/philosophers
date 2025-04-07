@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/04 11:04:07 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:29:17 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,19 @@ typedef struct s_table
 	int	eat_time;
 	int	sleep_time;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	waiter_mutex;
 }				t_table;
 
 typedef struct s_philo
 {
+	t_table			*table;
 	int				id;
 	long			bday;
 	long			last_meal_time;
-	int				has_fork;
-	void			*left_fork;
-	void			*right_fork;
-	t_table			*table;
+	int				meals_eaten;
 	pthread_t		thread;
-	pthread_mutex_t	mutex_fork;
+	pthread_mutex_t	l_fork_mutex;
+	pthread_mutex_t	*r_fork_mutex;
 }				 t_philo;
 
 
@@ -56,8 +56,13 @@ void	philo_loop(t_philo **philos);
 //init
 t_table	*create_table(int num_philo, int die_time, int eat_time, int sleep_time, int num_meals);
 t_philo	*create_philo(int id, t_table *table);
-t_philo	**create_philos(int num_philo, int die_time, int eat_time, int sleep_time, int num_meals);
+t_philo	**create_philos(t_table *table);
+void	init_right_forks(t_philo **philos);
 
+//actions
+void	eating(t_philo *philo);
+void	thinking(t_philo *philo);
+void	sleeping(t_philo *philo);
 
 //utils
 void	hanlde_error(char *msg);
@@ -68,5 +73,6 @@ int		ft_atoi(const char *str);
 void	ft_putstr_fd(char *s, int fd);
 void	print_arr(t_philo **arr);
 void	print_msg(int id, long ms, char *str);
+void	print_philo(t_philo *philo);
 
 #endif

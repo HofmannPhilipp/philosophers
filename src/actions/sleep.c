@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   eat.c                                              :+:      :+:    :+:   */
+/*   sleep.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/04 10:50:53 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/07 17:29:25 by phhofman         ###   ########.fr       */
+/*   Created: 2025/04/07 17:23:10 by phhofman          #+#    #+#             */
+/*   Updated: 2025/04/07 17:48:42 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	eating(t_philo *philo)
+void	sleeping(t_philo *philo)
 {
-	long	eat_time;
+	long	sleep_time;
 	
 	pthread_mutex_lock(&philo->table->print_mutex);
-	eat_time = get_curr_time(philo->bday);
-	print_msg(philo->id + 1, eat_time, EAT);
+	sleep_time = get_curr_time(philo->bday);
+	print_msg(philo->id + 1, sleep_time, SLEEP);
 	pthread_mutex_unlock(&philo->table->print_mutex);
-	philo->last_meal_time = get_bday();
-	usleep(philo->table->eat_time * 1000);
-	philo->meals_eaten++;
+	usleep(philo->table->sleep_time * 1000);
 }
