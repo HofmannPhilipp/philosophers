@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 10:52:26 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/07 16:54:50 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:31:53 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_table	*create_table(int num_philo, int die_time, int eat_time, int sleep_time,
 	table->sleep_time = sleep_time;
 	table->num_meals = num_meals;
 	pthread_mutex_init(&table->print_mutex, NULL);
-	pthread_mutex_init(&table->waiter_mutex, NULL);
+	pthread_mutex_init(&table->dead_mutex, NULL);
 	return (table);
 }
 
@@ -34,7 +34,7 @@ t_philo	*create_philo(int id, t_table *table)
 	philo = malloc(sizeof(t_philo));
 	memset(philo, 0, sizeof(t_philo));
 	pthread_mutex_init(&philo->l_fork_mutex, NULL);
-	philo->id = id;
+	philo->id = id + 1;
 	philo->table = table;
 	return (philo);
 }

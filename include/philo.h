@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/07 17:29:17 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:00:21 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,16 @@ typedef struct s_table
 	int	die_time;
 	int	eat_time;
 	int	sleep_time;
+	int	dead;
 	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	waiter_mutex;
+	pthread_mutex_t	dead_mutex;
 }				t_table;
 
 typedef struct s_philo
 {
 	t_table			*table;
 	int				id;
-	long			bday;
+	long			start_time;
 	long			last_meal_time;
 	int				meals_eaten;
 	pthread_t		thread;
@@ -63,16 +64,20 @@ void	init_right_forks(t_philo **philos);
 void	eating(t_philo *philo);
 void	thinking(t_philo *philo);
 void	sleeping(t_philo *philo);
+int		is_dead(t_philo *philo);
+void	lock_forks(t_philo *philo);
+void	unlock_forks(t_philo *philo);
+int		is_full(t_philo *philo);
 
 //utils
 void	hanlde_error(char *msg);
 void	print_usage_error();
 long	get_curr_time(long bday);
-long	get_bday(void);
+long	get_start_time(void);
 int		ft_atoi(const char *str);
 void	ft_putstr_fd(char *s, int fd);
 void	print_arr(t_philo **arr);
-void	print_msg(int id, long ms, char *str);
+void	print_msg(t_philo *philo, long ms, char *str);
 void	print_philo(t_philo *philo);
 
 #endif

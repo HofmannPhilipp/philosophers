@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/07 17:56:03 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:01:37 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,13 @@ void	hanlde_error(char *msg)
 	exit(EXIT_FAILURE);
 }
 
-void	print_msg(int id, long ms, char *str)
+void	print_msg(t_philo *philo, long ms, char *str)
 {
-	printf("%ld %d %s\n", ms, id, str);
+	if (philo->table->dead == 1)
+		return ;
+	pthread_mutex_lock(&philo->table->print_mutex);
+	printf("%ld %d %s\n", ms, philo->id, str);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 }
 
 void	print_usage_error()
@@ -52,7 +56,7 @@ long	get_curr_time(long time)
 	return (now - time);
 }
 
-long	get_bday(void)
+long	get_start_time(void)
 {
 	struct timeval tv;
 	long	time;
@@ -66,11 +70,42 @@ void	print_philo(t_philo *philo)
 {
 	printf("🧠 Philosopher Info [ID: %d]\n", philo->id);
 	printf("──────────────────────────────\n");
-	printf("🍼 Birthday:           %ld\n", philo->bday);
+	printf("🍼 Birthday:           %ld\n", philo->start_time);
 	printf("🍝 Last meal time:     %ld\n", philo->last_meal_time);
 	printf("🍴 Meals eaten:        %d\n", philo->meals_eaten);
 	printf("🧵 Thread ID:          %lu\n", (unsigned long)philo->thread);
 	printf("🔐 Left fork mutex:    %p\n", (void *)&philo->l_fork_mutex);
 	printf("🔐 Right fork mutex:   %p\n", (void *)philo->r_fork_mutex);
 	printf("\n");
+}
+
+int	is_dead(t_philo *philo)
+{
+	if (get_curr_time(philo->last_meal_time) < philo->table->die_time)
+		return (0);
+	pthread_mutex_lock(&philo->table->dead_mutex);
+	print_msg(philo, get_curr_time(philo->start_time), DEAD);
+	philo->table->dead = 1;
+	pthread_mutex_unlock(&philo->table->dead_mutex);
+	return (1);
+}
+
+void	lock_forks(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->l_fork_mutex);
+	print_msg(philo, get_curr_time(philo->start_time), FORK);
+	pthread_mutex_lock(philo->r_fork_mutex);
+	print_msg(philo, get_curr_time(philo->start_time), FORK);
+}
+
+void	unlock_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(&philo->l_fork_mutex);
+	pthread_mutex_unlock(philo->r_fork_mutex);
+}
+int	is_full(t_philo *philo)
+{
+	if (philo->meals_eaten < philo->table->num_meals)
+		return (0);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:12:28 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/02 11:13:16 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:10:06 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@ int	ft_atoi(const char *str)
 		sum = sum * 10 + (*str - '0');
 		str ++;
 	}
+	if (*str != '\0')
+		return ()
 	return (sign * sum);
 }
