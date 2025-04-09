@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:05:21 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/08 14:07:41 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:45:41 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*routine(void *arg)
 	philo = (t_philo *)arg;
 	philo->start_time = get_start_time();
 	philo->last_meal_time = get_start_time();
-	while (philo->meals_eaten < philo->table->num_meals && !is_dead(philo))
+	while ((philo->meals_eaten < philo->table->data->num_meals) && !is_dead(philo))
 	{
 		thinking(philo);
 		eating(philo);
@@ -29,7 +29,6 @@ void	*routine(void *arg)
 	}
 	return (NULL);
 }
-
 void	philo_loop(t_philo **philos)
 {
 	int	i;
@@ -37,6 +36,7 @@ void	philo_loop(t_philo **philos)
 	i = 0;
 	while(philos[i] != NULL)
 	{
+		print_philo(philos[i]);
 		pthread_create(&philos[i]->thread, NULL, &routine, philos[i]);
 		i++;
 	}
