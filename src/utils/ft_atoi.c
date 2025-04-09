@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:12:28 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/09 10:06:59 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:12:34 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ static int	ft_iswhitespace(char c)
 	return (0);
 }
 
-int	ft_atoi(const char *str)
+long	ft_atol(const char *str)
 {
 	int		sign;
-	int		sum;
+	long	sum;
 
 	sign = 1;
 	while (ft_iswhitespace(*str) && *str)
@@ -49,6 +49,6 @@ int	ft_atoi(const char *str)
 		str ++;
 	}
 	if (*str != '\0')
-		return ()
+		return (INT_MIN);
 	return (sign * sum);
 }

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/08 14:01:37 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:24:50 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,58 @@ int	is_full(t_philo *philo)
 	if (philo->meals_eaten < philo->table->num_meals)
 		return (0);
 	return (1);
+}
+
+int	parse_input(t_table *table, char *argv[])
+{
+	long	num_philo;
+	long	die_time;
+	long	eat_time;
+	long	sleep_time;
+	long	num_meals;
+	
+	num_philo = ft_atol(argv[0]);
+	die_time = ft_atol(argv[1]);
+	eat_time = ft_atol(argv[2]);
+	sleep_time = ft_atol(argv[3]);
+	if (argv[4])
+	{
+		num_meals = ft_atol(argv[4]);
+		if (!valid_inputs(num_philo, die_time, eat_time, sleep_time, num_meals))
+			return (false);
+ 	}
+	else
+		table->num_meals = INT_MIN;
+	table->num_philo = (int)num_philo;
+	table->die_time = (int)die_time;
+	table->eat_time = (int)eat_time;
+	table->sleep_time = (int)sleep_time;
+	return (true);
+}
+
+int	valid_inputs(long num_philo, long die_time, long eat_time, long sleep_time, long num_meals)
+{
+	if (num_philo == INT_MIN || die_time == INT_MIN ||
+		eat_time == INT_MIN || sleep_time == INT_MIN)
+	{
+		printf("Invalid (non-numeric or out-of-range) input\n");
+		return (false);
+	}if (num_philo < 1 || num_philo > INT_MAX)
+	{
+		printf("Invalid number of philosophers\n");
+		return (false);
+	}
+	if (die_time > INT_MAX || die_time < 60 ||
+		eat_time > INT_MAX || eat_time < 60 ||
+		sleep_time > INT_MAX || sleep_time < 60)
+	{
+		printf("Time values must be between 60 and INT_MAX\n");
+		return (false);
+	}
+	if (num_meals == INT_MIN || num_meals < 1 || num_meals > INT_MAX)
+		{
+			printf("Invalid number of meals\n");
+			return (false);
+		}
+	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/08 14:00:21 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:29:47 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <limits.h>
+#include <stdbool.h>
 #include <sys/time.h>
 
 # define FORK		"has taken a fork"
@@ -50,8 +52,6 @@ typedef struct s_philo
 	pthread_mutex_t	*r_fork_mutex;
 }				 t_philo;
 
-
-
 void	philo_loop(t_philo **philos);
 
 //init
@@ -74,10 +74,12 @@ void	hanlde_error(char *msg);
 void	print_usage_error();
 long	get_curr_time(long bday);
 long	get_start_time(void);
-int		ft_atoi(const char *str);
+long	ft_atol(const char *str);
 void	ft_putstr_fd(char *s, int fd);
 void	print_arr(t_philo **arr);
 void	print_msg(t_philo *philo, long ms, char *str);
 void	print_philo(t_philo *philo);
+int	parse_input(t_table *table, char *argv[]);
+int	valid_inputs(long num_philos, long die_time, long eat_time, long sleep_time, long num_meals);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:15 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/07 15:43:16 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:29:18 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	main(int argc, char *argv[])
 		print_usage_error();
 		return (EXIT_FAILURE);
 	}
-	table = create_table(ft_atoi(argv[1]), ft_atoi(argv[2]), ft_atoi(argv[3]), ft_atoi(argv[4]), ft_atoi(argv[5]));
+	if (!parse_input(table, argv + 1))
+		return (EXIT_FAILURE);
 	philos = create_philos(table);
 	philo_loop(philos);
 	// pthread_mutex_destroy()
