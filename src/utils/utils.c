@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/09 16:45:36 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:25:10 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,8 @@ void	print_arr(t_philo **arr)
 	}
 }
 
-long	get_curr_time(long time)
-{
-	struct timeval tv;
-	long	now;
-	
-	gettimeofday(&tv, NULL);
-	now = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	return (now - time);
-}
 
-long	get_start_time(void)
+long	get_time(void)
 {
 	struct timeval tv;
 	long	time;
@@ -60,6 +51,14 @@ long	get_start_time(void)
 	return (time);
 }
 
+long	get_elapsed_time(long time)
+{
+	struct timeval tv;
+	long	now;
+	
+	now = get_time();
+	return (now - time);
+}
 void	print_philo(t_philo *philo)
 {
 	printf("🧠 Philosopher Info [ID: %d]\n", philo->id);
@@ -89,4 +88,14 @@ int	is_full(t_philo *philo)
 	if (philo->meals_eaten < philo->table->data->num_meals)
 		return (0);
 	return (1);
+}
+int	usleep_plus(long	duration, t_table *table)
+{
+	long	start;
+
+	start = get_time();
+	while(gettime() - start < duration)
+	{
+		
+	}
 }

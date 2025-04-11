@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/09 16:47:28 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:18:30 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ typedef struct s_table
 	pthread_mutex_t	dead_mutex;
 }				t_table;
 
-
-
 typedef struct s_philo
 {
 	t_table			*table;
@@ -76,8 +74,8 @@ int		is_full(t_philo *philo);
 
 //utils
 void	print_usage_error();
-long	get_curr_time(long bday);
-long	get_start_time(void);
+long	get_elapsed_time(long bday);
+long	get_time(void);
 long	ft_atol(const char *str);
 void	ft_putstr_fd(char *s, int fd);
 void	print_arr(t_philo **arr);

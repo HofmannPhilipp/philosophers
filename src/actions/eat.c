@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:50:53 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/09 16:49:34 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:19:27 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ static void	lock_forks(t_philo *philo, pthread_mutex_t *fork1, pthread_mutex_t *
 	if (fork1)
 	{
 		pthread_mutex_lock(fork1);
-		print_msg(philo, get_curr_time(philo->start_time), FORK);
+		print_msg(philo, get_elapsed_time(philo->start_time), FORK);
 	}
 	if(fork2)
 	{
 		pthread_mutex_lock(fork2);
-		print_msg(philo, get_curr_time(philo->start_time), FORK);
+		print_msg(philo, get_elapsed_time(philo->start_time), FORK);
 	}
 	if (fork1 && fork2)
 		philo->has_both_forks = true;
@@ -57,9 +57,9 @@ void	eating(t_philo *philo)
 	take_forks(philo);
 	if (philo->has_both_forks)
 	{
-		eat_time = get_curr_time(philo->start_time);
+		eat_time = get_elapsed_time(philo->start_time);
 		print_msg(philo, eat_time, EAT);
-		philo->last_meal_time = get_start_time();
+		philo->last_meal_time = get_time();
 		usleep(philo->table->data->eat_time * 1000);
 		philo->meals_eaten++;
 	}
