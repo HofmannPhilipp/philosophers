@@ -1,51 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/31 14:05:21 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/09 16:45:41 by phhofman         ###   ########.fr       */
+/*   Created: 2025/04/14 09:16:10 by phhofman          #+#    #+#             */
+/*   Updated: 2025/04/14 10:59:00 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*routine(void *arg)
+void	start_simulation(t_philo **philos, t_table *table)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
-	philo->start_time = get_start_time();
-	philo->last_meal_time = get_start_time();
-	while ((philo->meals_eaten < philo->table->data->num_meals) && !is_dead(philo))
-	{
-		thinking(philo);
-		eating(philo);
-		if (is_full(philo) || is_dead(philo))
-			break;
-		sleeping(philo);
-	}
-	return (NULL);
+	create_all_threads(philos, table);
 }
-void	philo_loop(t_philo **philos)
+
+int	create_all_threads(t_philo **philos, t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while(philos[i] != NULL)
 	{
-		print_philo(philos[i]);
-		pthread_create(&philos[i]->thread, NULL, &routine, philos[i]);
+		pthread_create(&philos[i]->thread, NULL, &philo_routine, philos[i]);
 		i++;
 	}
+	set_bool(&table->table_mutex, table->all_threads_ready, true);
 	i = 0;
 	while (philos[i] != NULL)
 	{
 		pthread_join(philos[i]->thread, NULL);
 		i++;
 	}
+}
+void	wait_all_threads(t_table *table)
+{
+	while(!get_bool(&table->table_mutex, &table->all_threads_ready))
+	;
+}
+
+void	destroy_all_mutex(t_philo **philos)
+{
+	int	i;
+	
 	i = 0;
 	while (philos[i] != NULL)
 	{

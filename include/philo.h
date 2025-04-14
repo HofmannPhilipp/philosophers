@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/11 15:18:30 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:08:49 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ typedef struct s_table
 {
 	t_data			*data;
 	bool			is_dead;
+	bool			simualtion_finished;
+	bool			all_threads_ready;
+	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	dead_mutex;
 }				t_table;
 
 typedef struct s_philo
@@ -52,13 +54,14 @@ typedef struct s_philo
 	long			start_time;
 	long			last_meal_time;
 	int				meals_eaten;
-	pthread_t		thread;
 	bool			has_both_forks;
+	bool			full;
+	pthread_t		thread;
+	pthread_mutex_t	philo_mutex;
 	pthread_mutex_t	l_fork_mutex;
 	pthread_mutex_t	*r_fork_mutex;
 }				 t_philo;
 
-void	philo_loop(t_philo **philos);
 
 //init
 int	init_table(t_table *table, t_data *data);
@@ -69,16 +72,21 @@ t_philo	**create_philos(t_table *table);
 void	eating(t_philo *philo);
 void	thinking(t_philo *philo);
 void	sleeping(t_philo *philo);
-int		is_dead(t_philo *philo);
-int		is_full(t_philo *philo);
+bool	is_dead(t_philo *philo);
+bool	is_full(t_philo *philo);
+void	*philo_routine(void *arg);
+
+void	wait_all_threads(t_table *table);
 
 //utils
+void	set_bool(pthread_mutex_t *mutex,bool *ptr, bool new_value);
+bool	get_bool(pthread_mutex_t *mutex, bool *ptr);
+long	get_long(pthread_mutex_t *mutex, long *ptr);
+bool	is_simulation_finished(t_table *table);
 void	print_usage_error();
 long	get_elapsed_time(long bday);
 long	get_time(void);
 long	ft_atol(const char *str);
-void	ft_putstr_fd(char *s, int fd);
-void	print_arr(t_philo **arr);
 void	print_msg(t_philo *philo, long ms, char *str);
 void	print_philo(t_philo *philo);
 int		parse_input(t_data *data, char *argv[]);

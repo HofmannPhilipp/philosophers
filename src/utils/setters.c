@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   setters.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/03 10:40:48 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/03 10:41:26 by phhofman         ###   ########.fr       */
+/*   Created: 2025/04/14 09:05:32 by phhofman          #+#    #+#             */
+/*   Updated: 2025/04/14 09:07:37 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	ft_putchar_fd(char c, int fd)
+void	set_bool(pthread_mutex_t *mutex,bool *ptr, bool new_value)
 {
-	write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	while (*s)
-	{
-		ft_putchar_fd(*s, fd);
-		s ++;
-	}
+	pthread_mutex_lock(mutex);
+	*ptr = new_value;
+	pthread_mutex_unlock(mutex);
 }

@@ -1,36 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   safe_function.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/26 12:50:15 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 11:17:27 by phhofman         ###   ########.fr       */
+/*   Created: 2025/04/14 09:07:56 by phhofman          #+#    #+#             */
+/*   Updated: 2025/04/14 09:08:50 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char *argv[])
+void	safe_mutex_lock(pthread_mutex_t *mutex)
 {
-	t_philo	**philos;
-	t_table	table;
-	t_data	data;
 	
-	philos = NULL;
-	if (argc < 5 || argc > 6)
-	{
-		print_usage_error();
-		return (EXIT_FAILURE);
-	}
-	if (parse_input(&data, argv + 1) != 0)
-		return (EXIT_FAILURE);
-	if (init_table(&table, &data) != 0)
-		return (EXIT_FAILURE);
-	philos = create_philos(&table);
-	if (!philos)
-		return (EXIT_FAILURE);
-	
-	return (EXIT_SUCCESS);
 }

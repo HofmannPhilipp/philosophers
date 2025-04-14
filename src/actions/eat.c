@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:50:53 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/11 15:19:27 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:01:50 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,11 @@ static int	take_forks(t_philo *philo)
 
 void	eating(t_philo *philo)
 {
-	long	eat_time;
-	
+
 	take_forks(philo);
 	if (philo->has_both_forks)
 	{
-		eat_time = get_elapsed_time(philo->start_time);
-		print_msg(philo, eat_time, EAT);
+		print_msg(philo, get_elapsed_time(philo->start_time), EAT);
 		philo->last_meal_time = get_time();
 		usleep(philo->table->data->eat_time * 1000);
 		philo->meals_eaten++;

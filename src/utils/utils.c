@@ -6,19 +6,18 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/11 15:25:10 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/14 10:56:10 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-void	print_msg(t_philo *philo, long ms, char *str)
+void	print_status(t_philo *philo, long ms, char *status)
 {
-	if (philo->table->is_dead == 1)
+	if (is_simulation_finished(philo->table))
 		return ;
 	pthread_mutex_lock(&philo->table->print_mutex);
-	printf("%ld %d %s\n", ms, philo->id, str);
+	printf("%ld %d %s\n", ms, philo->id, status);
 	pthread_mutex_unlock(&philo->table->print_mutex);
 }
 
@@ -27,19 +26,6 @@ void	print_usage_error()
 	printf("Error: Invalid number of arguments.\n");
 	printf("Usage: ./philosophers number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
 }
-
-void	print_arr(t_philo **arr)
-{
-	int i;
-
-	i = 0;
-	while (arr[i] != NULL)
-	{
-		printf("id: %d\n", arr[i]->id);
-		i++;
-	}
-}
-
 
 long	get_time(void)
 {
@@ -72,30 +58,29 @@ void	print_philo(t_philo *philo)
 	printf("\n");
 }
 
-int	is_dead(t_philo *philo)
+bool	is_dead(t_philo *philo)
 {
-	if (get_curr_time(philo->last_meal_time) < philo->table->data->die_time)
-		return (0);
-	pthread_mutex_lock(&philo->table->dead_mutex);
-	print_msg(philo, get_curr_time(philo->start_time), DEAD);
-	philo->table->is_dead = 1;
-	pthread_mutex_unlock(&philo->table->dead_mutex);
-	return (1);
+	if (get_elapsed_time(philo->last_meal_time) < philo->table->data->die_time)
+		return (false);
+	set_bool(&philo->table->table_mutex, philo->table->is_dead, true);
+	print_msg(philo, get_elapsed_time(philo->start_time), DEAD);
+	return (true);
 }
 
-int	is_full(t_philo *philo)
+bool	is_full(t_philo *philo)
 {
 	if (philo->meals_eaten < philo->table->data->num_meals)
-		return (0);
-	return (1);
+		return (false);
+	return (true);
 }
-int	usleep_plus(long	duration, t_table *table)
-{
-	long	start;
+// int	usleep_plus(long	duration, t_table *table)
+// {
+// 	long	start;
 
-	start = get_time();
-	while(gettime() - start < duration)
-	{
+// 	start = get_time();
+// 	while(gettime() - start < duration)
+// 	{
 		
-	}
-}
+// 	}
+// }
+

@@ -1,36 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   routines.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/26 12:50:15 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 11:17:27 by phhofman         ###   ########.fr       */
+/*   Created: 2025/04/14 10:26:12 by phhofman          #+#    #+#             */
+/*   Updated: 2025/04/14 11:02:24 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char *argv[])
+void	*philo_routine(void *arg)
 {
-	t_philo	**philos;
-	t_table	table;
-	t_data	data;
-	
-	philos = NULL;
-	if (argc < 5 || argc > 6)
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	wait_all_threads(philo->table);
+	philo->start_time = get_time();
+	philo->last_meal_time = get_time();
+	while ((philo->meals_eaten < philo->table->data->num_meals) && !is_dead(philo))
 	{
-		print_usage_error();
-		return (EXIT_FAILURE);
+		thinking(philo);
+		eating(philo);
+		if (is_full(philo) || is_dead(philo))
+			break;
+		sleeping(philo);
 	}
-	if (parse_input(&data, argv + 1) != 0)
-		return (EXIT_FAILURE);
-	if (init_table(&table, &data) != 0)
-		return (EXIT_FAILURE);
-	philos = create_philos(&table);
-	if (!philos)
-		return (EXIT_FAILURE);
-	
-	return (EXIT_SUCCESS);
+	return (NULL);
 }
