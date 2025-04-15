@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 11:08:49 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:28:42 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,21 @@
 
 typedef struct s_data
 {
-	int	num_philo;
-	int	num_meals;
-	int	die_time;
-	int	eat_time;
-	int	sleep_time;
+	long	num_philo;
+	long	num_meals;
+	long	die_time;
+	long	eat_time;
+	long	sleep_time;
 }	t_data;
 
 typedef struct s_table
 {
 	t_data			*data;
 	bool			is_dead;
-	bool			simualtion_finished;
+	bool			simulation_finished;
 	bool			all_threads_ready;
+	pthread_t		monitor;
+	struct s_philo	**philos;
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	print_mutex;
 }				t_table;
@@ -53,7 +55,7 @@ typedef struct s_philo
 	int				id;
 	long			start_time;
 	long			last_meal_time;
-	int				meals_eaten;
+	long			meals_eaten;
 	bool			has_both_forks;
 	bool			full;
 	pthread_t		thread;
@@ -64,22 +66,23 @@ typedef struct s_philo
 
 
 //init
-int	init_table(t_table *table, t_data *data);
+int		init_table(t_table *table, t_data *data);
 t_philo	*create_philo(int id, t_table *table);
-t_philo	**create_philos(t_table *table);
+t_philo	**create_philos_arr(t_table *table);
 
-//actions
-void	eating(t_philo *philo);
-void	thinking(t_philo *philo);
-void	sleeping(t_philo *philo);
-bool	is_dead(t_philo *philo);
-bool	is_full(t_philo *philo);
-void	*philo_routine(void *arg);
-
+//simulation
+void	start_simulation(t_philo **philos, t_table *table);
 void	wait_all_threads(t_table *table);
+void	*philo_routine(void *arg);
+void	eating(t_philo *philo);
+void	*monitor_routine(void *arg);
+bool	is_dead(t_philo *philo, t_table *table);
+bool	is_full(t_philo *philo, t_table *table);
 
 //utils
-void	set_bool(pthread_mutex_t *mutex,bool *ptr, bool new_value);
+void	usleep_plus(long duration, t_table *table);
+void	set_bool(pthread_mutex_t *mutex, bool *ptr, bool new_value);
+void	set_long(pthread_mutex_t *mutex, long *ptr, long new_value);
 bool	get_bool(pthread_mutex_t *mutex, bool *ptr);
 long	get_long(pthread_mutex_t *mutex, long *ptr);
 bool	is_simulation_finished(t_table *table);
@@ -87,8 +90,8 @@ void	print_usage_error();
 long	get_elapsed_time(long bday);
 long	get_time(void);
 long	ft_atol(const char *str);
-void	print_msg(t_philo *philo, long ms, char *str);
-void	print_philo(t_philo *philo);
+void	print_status(t_philo *philo, long ms, char *status);
+void	print_philos_arr(t_philo **philos, int count);
 int		parse_input(t_data *data, char *argv[]);
 
 #endif

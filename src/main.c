@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:15 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 11:17:27 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:11:33 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	if (init_table(&table, &data) != 0)
 		return (EXIT_FAILURE);
-	philos = create_philos(&table);
+	philos = create_philos_arr(&table);
 	if (!philos)
 		return (EXIT_FAILURE);
-	
+	table.philos = philos;
+	// print_philos_arr(philos, table.data->num_philo);
+	start_simulation(philos, &table);
 	return (EXIT_SUCCESS);
 }

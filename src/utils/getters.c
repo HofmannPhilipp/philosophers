@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 08:55:38 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 10:42:52 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:29:02 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	is_simulation_finished(t_table *table)
 {
 	bool	value;
 	pthread_mutex_lock(&table->table_mutex);
-	value = table->simualtion_finished;
+	value = table->simulation_finished;
 	pthread_mutex_unlock(&table->table_mutex);
 	return (value);
 }

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 10:56:10 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:25:33 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 void	print_status(t_philo *philo, long ms, char *status)
 {
-	if (is_simulation_finished(philo->table))
+	t_table *table;
+
+	table = philo->table;
+	if (get_bool(&table->table_mutex, &table->is_dead) || is_simulation_finished(table))
 		return ;
-	pthread_mutex_lock(&philo->table->print_mutex);
+	pthread_mutex_lock(&table->print_mutex);
 	printf("%ld %d %s\n", ms, philo->id, status);
-	pthread_mutex_unlock(&philo->table->print_mutex);
+	pthread_mutex_unlock(&table->print_mutex);
 }
 
 void	print_usage_error()
@@ -39,48 +42,31 @@ long	get_time(void)
 
 long	get_elapsed_time(long time)
 {
-	struct timeval tv;
 	long	now;
 	
 	now = get_time();
 	return (now - time);
 }
-void	print_philo(t_philo *philo)
+void	print_philos_arr(t_philo **philo, int count)
 {
-	printf("🧠 Philosopher Info [ID: %d]\n", philo->id);
-	printf("──────────────────────────────\n");
-	printf("🍼 Birthday:           %ld\n", philo->start_time);
-	printf("🍝 Last meal time:     %ld\n", philo->last_meal_time);
-	printf("🍴 Meals eaten:        %d\n", philo->meals_eaten);
-	printf("🧵 Thread ID:          %lu\n", (unsigned long)philo->thread);
-	printf("🔐 Left fork mutex:    %p\n", (void *)&philo->l_fork_mutex);
-	printf("🔐 Right fork mutex:   %p\n", (void *)philo->r_fork_mutex);
-	printf("\n");
-}
+	int	i = 0;
 
-bool	is_dead(t_philo *philo)
-{
-	if (get_elapsed_time(philo->last_meal_time) < philo->table->data->die_time)
-		return (false);
-	set_bool(&philo->table->table_mutex, philo->table->is_dead, true);
-	print_msg(philo, get_elapsed_time(philo->start_time), DEAD);
-	return (true);
-}
+	while (i < count)
+	{
+		printf("🧠 Philosopher Info [ID: %d]\n", philo[i]->id);
+		printf("────────────────────────────────────────────\n");
+		printf("🍼 Birthday:           %ld\n", philo[i]->start_time);
+		printf("🍝 Last meal time:     %ld\n", philo[i]->last_meal_time);
+		printf("🍴 Meals eaten:        %ld\n", philo[i]->meals_eaten);
+		printf("✅ Full:               %s\n", philo[i]->full ? "Yes" : "No");
+		printf("👐 Has both forks:     %s\n", philo[i]->has_both_forks ? "Yes" : "No");
+		printf("🧵 Thread ID:          %lu\n", (unsigned long)philo[i]->thread);
+		printf("🔐 Left fork mutex:    %p\n", (void *)&philo[i]->l_fork_mutex);
+		printf("🔐 Right fork mutex:   %p\n", (void *)philo[i]->r_fork_mutex);
+		printf("🏛️ Table pointer:      %p\n", (void *)philo[i]->table);
+		printf("\n");
 
-bool	is_full(t_philo *philo)
-{
-	if (philo->meals_eaten < philo->table->data->num_meals)
-		return (false);
-	return (true);
+		i++;
+	}
 }
-// int	usleep_plus(long	duration, t_table *table)
-// {
-// 	long	start;
-
-// 	start = get_time();
-// 	while(gettime() - start < duration)
-// 	{
-		
-// 	}
-// }
 

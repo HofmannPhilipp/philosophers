@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:06:06 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/09 15:06:49 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:11:15 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	valid_inputs(long num_philo, long die_time, long eat_time, long sleep
 	{
 		printf("Invalid (non-numeric or out-of-range) input\n");
 		return (1);
-	}if (num_philo < 1 || num_philo > INT_MAX)
+	}if (num_philo < 1 || num_philo > 200)
 	{
 		printf("Invalid number of philosophers\n");
 		return (1);
