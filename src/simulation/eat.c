@@ -6,63 +6,54 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:50:53 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/15 16:35:09 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:42:36 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	lock_forks(t_philo *philo, pthread_mutex_t *fork1, pthread_mutex_t *fork2)
+static void	lock_forks(t_philo *philo, t_table *table, pthread_mutex_t *fork1, pthread_mutex_t *fork2)
 {
-	if (fork1)
-	{
-		pthread_mutex_lock(fork1);
-		print_status(philo, get_elapsed_time(philo->start_time), FORK);
-	}
-	if(fork2)
-	{
-		pthread_mutex_lock(fork2);
-		print_status(philo, get_elapsed_time(philo->start_time), FORK);
-	}
-	if (fork1 && fork2)
-		philo->has_both_forks = true;
+	
+	long	start_time;
+	
+	pthread_mutex_lock(fork1);
+	start_time = get_long(&table->table_mutex, &table->start_time);
+	print_status(philo, get_elapsed_time(start_time), FORK);
+	pthread_mutex_lock(fork2);
+	start_time = get_long(&table->table_mutex, &table->start_time);
+	print_status(philo, get_elapsed_time(start_time), FORK);
 }
 
-static void	unlock_forks(t_philo *philo, pthread_mutex_t *fork1, pthread_mutex_t *fork2)
+static void	unlock_forks(pthread_mutex_t *fork1, pthread_mutex_t *fork2)
 {
-	if (fork1)
-		pthread_mutex_unlock(fork1);
-	if(fork2)
-		pthread_mutex_unlock(fork2);
-	philo->has_both_forks = false;
+	pthread_mutex_unlock(fork1);
+	pthread_mutex_unlock(fork2);
 }
-
 
 static int	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
-		lock_forks(philo, &philo->l_fork_mutex, philo->r_fork_mutex);
+		lock_forks(philo,philo->table, &philo->l_fork_mutex, philo->r_fork_mutex);
 	else
 	{
-		// usleep(500);
-		lock_forks(philo, philo->r_fork_mutex, &philo->l_fork_mutex);
+		usleep(200);
+		lock_forks(philo, philo->table ,philo->r_fork_mutex, &philo->l_fork_mutex);
 	}
 	return (0);
 }
 
-void	eating(t_philo *philo)
+void	eating(t_philo *philo, t_table *table)
 {
-	long	meals_eaten;
+	long	start_time;
 	
 	take_forks(philo);
-	if (philo->has_both_forks)
-	{
-		print_status(philo, get_elapsed_time(philo->start_time), EAT);
-		set_long(&philo->philo_mutex, &philo->last_meal_time, get_time());
-		usleep_plus(philo->table->data->eat_time, philo->table);
-		meals_eaten = get_long(&philo->philo_mutex, &philo->meals_eaten);
-		set_long(&philo->philo_mutex, &philo->meals_eaten, meals_eaten + 1);
-	}
-	unlock_forks(philo, &philo->l_fork_mutex, philo->r_fork_mutex);
-	
+	set_long(&philo->philo_mutex, &philo->last_meal_time, get_time());
+	philo->meals_eaten++;
+	start_time = get_long(&table->table_mutex, &table->start_time);
+	print_status(philo, get_elapsed_time(start_time), EAT);
+	usleep_plus(table->data->eat_time, table);
+	if (is_full(philo, table))
+		set_bool(&philo->philo_mutex, &philo->full, true);
+	unlock_forks(&philo->l_fork_mutex, philo->r_fork_mutex);
 }

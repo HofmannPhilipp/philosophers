@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/15 16:25:33 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:38:44 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_status(t_philo *philo, long ms, char *status)
 	t_table *table;
 
 	table = philo->table;
-	if (get_bool(&table->table_mutex, &table->is_dead) || is_simulation_finished(table))
+	if (get_bool(&philo->philo_mutex, &philo->full) || is_simulation_finished(philo->table))
 		return ;
 	pthread_mutex_lock(&table->print_mutex);
 	printf("%ld %d %s\n", ms, philo->id, status);
@@ -55,11 +55,10 @@ void	print_philos_arr(t_philo **philo, int count)
 	{
 		printf("🧠 Philosopher Info [ID: %d]\n", philo[i]->id);
 		printf("────────────────────────────────────────────\n");
-		printf("🍼 Birthday:           %ld\n", philo[i]->start_time);
+		printf("🍼 Birthday:           %ld\n", philo[i]->table->start_time);
 		printf("🍝 Last meal time:     %ld\n", philo[i]->last_meal_time);
 		printf("🍴 Meals eaten:        %ld\n", philo[i]->meals_eaten);
 		printf("✅ Full:               %s\n", philo[i]->full ? "Yes" : "No");
-		printf("👐 Has both forks:     %s\n", philo[i]->has_both_forks ? "Yes" : "No");
 		printf("🧵 Thread ID:          %lu\n", (unsigned long)philo[i]->thread);
 		printf("🔐 Left fork mutex:    %p\n", (void *)&philo[i]->l_fork_mutex);
 		printf("🔐 Right fork mutex:   %p\n", (void *)philo[i]->r_fork_mutex);

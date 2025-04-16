@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:26:12 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/15 16:31:33 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:45:48 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,24 @@ void	*monitor_routine(void *arg)
 	t_table	*table;
 	t_philo	*philo;
 	int		i;
-	long	philos_full_count;
-	
+	long	num_philo;
 	
 	table = (t_table *)arg;
+	pthread_mutex_lock(&table->table_mutex);
+	table->num_threads_ready++;
+	pthread_mutex_unlock(&table->table_mutex);
 	wait_all_threads(table);
-	philos_full_count = 0;
-	while (1)
+	set_long(&table->table_mutex, &table->start_time, get_time());
+	num_philo = get_long(&table->table_mutex, &table->data->num_philo);
+	while (!is_simulation_finished(table))
 	{
 		i = 0;
-		while (i < table->data->num_philo)
+		while (i < num_philo && !is_simulation_finished(table))
 		{
 			philo = table->philos[i];
 			if (is_dead(philo, table))
 			{
-				set_bool(&table->table_mutex, &table->simulation_finished, true);
-				return (NULL);
-			}
-			if (is_full(philo, table))
-				philos_full_count++;
-			if (philos_full_count >= get_long(&table->table_mutex, &table->data->num_philo))
-			{
+				print_status(philo, get_elapsed_time(get_long(&philo->philo_mutex, &table->start_time)), DEAD);
 				set_bool(&table->table_mutex, &table->simulation_finished, true);
 				return (NULL);
 			}

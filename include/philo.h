@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/15 16:28:42 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:42:52 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ typedef struct s_data
 typedef struct s_table
 {
 	t_data			*data;
-	bool			is_dead;
+	long			start_time;
 	bool			simulation_finished;
-	bool			all_threads_ready;
+	long			num_threads_ready;
 	pthread_t		monitor;
 	struct s_philo	**philos;
 	pthread_mutex_t	table_mutex;
@@ -53,10 +53,8 @@ typedef struct s_philo
 {
 	t_table			*table;
 	int				id;
-	long			start_time;
 	long			last_meal_time;
 	long			meals_eaten;
-	bool			has_both_forks;
 	bool			full;
 	pthread_t		thread;
 	pthread_mutex_t	philo_mutex;
@@ -74,7 +72,7 @@ t_philo	**create_philos_arr(t_table *table);
 void	start_simulation(t_philo **philos, t_table *table);
 void	wait_all_threads(t_table *table);
 void	*philo_routine(void *arg);
-void	eating(t_philo *philo);
+void	eating(t_philo *philo, t_table *table);
 void	*monitor_routine(void *arg);
 bool	is_dead(t_philo *philo, t_table *table);
 bool	is_full(t_philo *philo, t_table *table);

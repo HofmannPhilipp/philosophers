@@ -1,6 +1,6 @@
 NAME = philo
-CC = cc
-CFLAGS = -Werror -Wextra -Wall -I./include
+CC = gcc
+CFLAGS = -Werror -Wextra -Wall -I./include -pthread -g
 DEBUG_FLAGS = -Werror -Wextra -Wall -I./include -fsanitize=address -g
 SRC_DIR = ./src
 VPATH = $(SRC_DIR) $(SRC_DIR)/utils $(SRC_DIR)/simulation
