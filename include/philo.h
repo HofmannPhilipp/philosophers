@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/16 17:42:52 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:47:19 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,10 @@ void	eating(t_philo *philo, t_table *table);
 void	*monitor_routine(void *arg);
 bool	is_dead(t_philo *philo, t_table *table);
 bool	is_full(t_philo *philo, t_table *table);
+void	one_philo(t_philo *philo, t_table *table);
 
 //utils
+void	increase_threads_ready(t_table *table);
 void	usleep_plus(long duration, t_table *table);
 void	set_bool(pthread_mutex_t *mutex, bool *ptr, bool new_value);
 void	set_long(pthread_mutex_t *mutex, long *ptr, long new_value);
@@ -85,11 +87,12 @@ bool	get_bool(pthread_mutex_t *mutex, bool *ptr);
 long	get_long(pthread_mutex_t *mutex, long *ptr);
 bool	is_simulation_finished(t_table *table);
 void	print_usage_error();
-long	get_elapsed_time(long bday);
+long	get_elapsed_time(long time);
 long	get_time(void);
 long	ft_atol(const char *str);
 void	print_status(t_philo *philo, long ms, char *status);
 void	print_philos_arr(t_philo **philos, int count);
 int		parse_input(t_data *data, char *argv[]);
+void	free_philos_arr(t_philo **philos, int length);
 
 #endif

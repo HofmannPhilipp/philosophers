@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:27:58 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/16 17:35:58 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:47:12 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	wait_all_threads(t_table *table)
 	while(get_long(&table->table_mutex, &table->num_threads_ready) < 
 	get_long(&table->table_mutex, &table->data->num_philo + 1))
 		;
+		// usleep(100);
 }
 
 bool	is_dead(t_philo *philo, t_table *table)
@@ -65,4 +66,21 @@ void	usleep_plus(long duration, t_table *table)
 			while(get_elapsed_time(start) < duration)
 				;
 	}
+}
+
+void	increase_threads_ready(t_table *table)
+{
+	pthread_mutex_lock(&table->table_mutex);
+	table->num_threads_ready++;
+	pthread_mutex_unlock(&table->table_mutex);
+}
+
+void	one_philo(t_philo *philo, t_table *table)
+{
+	long	start_time;
+
+	start_time = get_long(&table->table_mutex, &table->start_time);
+	print_status(philo, get_elapsed_time(start_time), FORK);
+	while(!is_simulation_finished(table))
+		usleep(200);
 }

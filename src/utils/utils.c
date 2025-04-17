@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/16 17:38:44 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:48:45 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,18 @@ void	print_philos_arr(t_philo **philo, int count)
 
 		i++;
 	}
+}
+
+void	free_philos_arr(t_philo **philos, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i < length)
+	{
+		free(philos[i]);
+		i++;
+	}
+	free(philos);
 }
 
