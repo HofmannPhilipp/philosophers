@@ -6,19 +6,17 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:27:58 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/17 13:47:12 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:01:25 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
 void	wait_all_threads(t_table *table)
 {
-	while(get_long(&table->table_mutex, &table->num_threads_ready) < 
-	get_long(&table->table_mutex, &table->data->num_philo + 1))
-		;
-		// usleep(100);
+	while (get_long(&table->table_mutex, &table->num_threads_ready)
+		< (get_long(&table->table_mutex, &table->data->num_philo) + 1))
+			;
 }
 
 bool	is_dead(t_philo *philo, t_table *table)
@@ -42,7 +40,7 @@ bool	is_full(t_philo *philo, t_table *table)
 	if (get_bool(&philo->philo_mutex, &philo->full))
 		return (true);
 	num_meals = get_long(&table->table_mutex, &table->data->num_meals);
-	if (num_meals == INT_MIN)
+	if (num_meals == NO_MEAL_LIMIT)
 		return (false);
 	if (philo->meals_eaten == num_meals)
 		return (true);
@@ -55,24 +53,17 @@ void	usleep_plus(long duration, t_table *table)
 	long	rem;
 
 	start = get_time();
-	while(get_elapsed_time(start) < duration)
+	while (get_elapsed_time(start) < duration)
 	{
 		if (is_simulation_finished(table))
-			break;
+			break ;
 		rem = duration - get_elapsed_time(start);
 		if (rem > 1000)
 			usleep((rem / 2) * 1000);
 		else
-			while(get_elapsed_time(start) < duration)
+			while (get_elapsed_time(start) < duration)
 				;
 	}
-}
-
-void	increase_threads_ready(t_table *table)
-{
-	pthread_mutex_lock(&table->table_mutex);
-	table->num_threads_ready++;
-	pthread_mutex_unlock(&table->table_mutex);
 }
 
 void	one_philo(t_philo *philo, t_table *table)
@@ -80,7 +71,9 @@ void	one_philo(t_philo *philo, t_table *table)
 	long	start_time;
 
 	start_time = get_long(&table->table_mutex, &table->start_time);
+	pthread_mutex_lock(&philo->l_fork_mutex);
 	print_status(philo, get_elapsed_time(start_time), FORK);
-	while(!is_simulation_finished(table))
+	pthread_mutex_unlock(&philo->l_fork_mutex);
+	while (!is_simulation_finished(table))
 		usleep(200);
 }

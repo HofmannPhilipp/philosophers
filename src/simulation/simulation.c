@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:16:10 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/17 13:40:45 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:02:33 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ static void	create_all_threads(t_philo **philos, t_table *table)
 
 	i = 0;
 	table->start_time = get_time();
-	while(i < table->data->num_philo)
+	while (i < table->data->num_philo)
 	{
+		set_long(&philos[i]->philo_mutex, &philos[i]->last_meal_time,
+			table->start_time);
 		pthread_create(&philos[i]->thread, NULL, &philo_routine, philos[i]);
 		i++;
 	}
@@ -39,12 +41,15 @@ static void	join_all_threads(t_philo **philos, t_table *table)
 	set_bool(&table->table_mutex, &table->simulation_finished, true);
 	pthread_join(table->monitor, NULL);
 }
+
 static void	destroy_all_mutex(t_philo **philos, t_table *table)
 {
-	int	i;
-	
+	int		i;
+	long	num_philo;
+
 	i = 0;
-	while (i < table->data->num_philo)
+	num_philo = get_long(&table->table_mutex, &table->data->num_philo);
+	while (i < num_philo)
 	{
 		pthread_mutex_destroy(&philos[i]->l_fork_mutex);
 		pthread_mutex_destroy(&philos[i]->philo_mutex);
@@ -57,6 +62,6 @@ static void	destroy_all_mutex(t_philo **philos, t_table *table)
 void	start_simulation(t_philo **philos, t_table *table)
 {
 	create_all_threads(philos, table);
-	join_all_threads(philos,table);
+	join_all_threads(philos, table);
 	destroy_all_mutex(philos, table);
 }

@@ -6,17 +6,17 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:50:53 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/17 13:48:58 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 09:44:46 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	lock_forks(t_philo *philo, t_table *table, pthread_mutex_t *fork1, pthread_mutex_t *fork2)
+static void	lock_forks(t_philo *philo, t_table *table, pthread_mutex_t *fork1,
+		pthread_mutex_t *fork2)
 {
-	
 	long	start_time;
-	
+
 	pthread_mutex_lock(fork1);
 	start_time = get_long(&table->table_mutex, &table->start_time);
 	print_status(philo, get_elapsed_time(start_time), FORK);
@@ -34,11 +34,13 @@ static void	unlock_forks(pthread_mutex_t *fork1, pthread_mutex_t *fork2)
 static int	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
-		lock_forks(philo,philo->table, &philo->l_fork_mutex, philo->r_fork_mutex);
+		lock_forks(philo, philo->table, &philo->l_fork_mutex,
+			philo->r_fork_mutex);
 	else
 	{
-		usleep(200);
-		lock_forks(philo, philo->table ,philo->r_fork_mutex, &philo->l_fork_mutex);
+		usleep(500);
+		lock_forks(philo, philo->table, philo->r_fork_mutex,
+			&philo->l_fork_mutex);
 	}
 	return (0);
 }
@@ -46,7 +48,7 @@ static int	take_forks(t_philo *philo)
 void	eating(t_philo *philo, t_table *table)
 {
 	long	start_time;
-	
+
 	take_forks(philo);
 	set_long(&philo->philo_mutex, &philo->last_meal_time, get_time());
 	philo->meals_eaten++;

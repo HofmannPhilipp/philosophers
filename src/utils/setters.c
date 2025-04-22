@@ -6,13 +6,13 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:05:32 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/15 08:40:45 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:22:53 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	set_bool(pthread_mutex_t *mutex,bool *ptr, bool new_value)
+void	set_bool(pthread_mutex_t *mutex, bool *ptr, bool new_value)
 {
 	pthread_mutex_lock(mutex);
 	*ptr = new_value;
@@ -24,4 +24,11 @@ void	set_long(pthread_mutex_t *mutex, long *ptr, long new_value)
 	pthread_mutex_lock(mutex);
 	*ptr = new_value;
 	pthread_mutex_unlock(mutex);
+}
+
+void	increase_threads_ready(t_table *table)
+{
+	pthread_mutex_lock(&table->table_mutex);
+	table->num_threads_ready++;
+	pthread_mutex_unlock(&table->table_mutex);
 }

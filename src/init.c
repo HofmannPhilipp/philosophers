@@ -6,27 +6,27 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 10:52:26 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/14 13:54:20 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:54:29 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_table(t_table *table, t_data *data)
+bool	init_table(t_table *table, t_data *data)
 {
 	memset(table, 0, sizeof(t_table));
 	table->data = data;
-	if(pthread_mutex_init(&table->print_mutex, NULL) != 0)
+	if (pthread_mutex_init(&table->print_mutex, NULL) != 0)
 	{
 		printf("Failed to init print mutex\n");
 		return (1);
 	}
-	if(pthread_mutex_init(&table->table_mutex, NULL) != 0)
+	if (pthread_mutex_init(&table->table_mutex, NULL) != 0)
 	{
 		printf("Failed to init table mutex\n");
-		return (1);
+		return (false);
 	}
-	return (0);
+	return (true);
 }
 
 t_philo	*create_philo(int id, t_table *table)
@@ -55,11 +55,11 @@ static void	init_right_forks(t_philo **philos, t_table *table)
 	philos[i - 1]->r_fork_mutex = &philos[0]->l_fork_mutex;
 }
 
-t_philo	**create_philos_arr(t_table *table)
+t_philo	**init_philos_arr(t_table *table)
 {
 	int		i;
 	t_philo	**philos_arr;
-	
+
 	philos_arr = malloc(sizeof(t_philo *) * (table->data->num_philo));
 	if (!philos_arr)
 	{
@@ -67,7 +67,7 @@ t_philo	**create_philos_arr(t_table *table)
 		return (NULL);
 	}
 	i = 0;
-	while(i < table->data->num_philo)
+	while (i < table->data->num_philo)
 	{
 		philos_arr[i] = create_philo(i, table);
 		i++;
