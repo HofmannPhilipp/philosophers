@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:16:10 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 14:02:33 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:37:25 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,8 @@ static void	create_all_threads(t_philo **philos, t_table *table)
 	int	i;
 
 	i = 0;
-	table->start_time = get_time();
 	while (i < table->data->num_philo)
 	{
-		set_long(&philos[i]->philo_mutex, &philos[i]->last_meal_time,
-			table->start_time);
 		pthread_create(&philos[i]->thread, NULL, &philo_routine, philos[i]);
 		i++;
 	}

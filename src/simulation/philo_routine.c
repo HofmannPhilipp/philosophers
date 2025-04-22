@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 13:15:41 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 10:10:31 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:35:44 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	table = philo->table;
 	increase_threads_ready(table);
+	set_long(&philo->philo_mutex, &philo->last_meal_time, get_time());
 	if (get_long(&table->table_mutex, &table->data->num_philo) == 1)
 	{
 		one_philo(philo, table);
@@ -44,9 +45,9 @@ void	*philo_routine(void *arg)
 			set_bool(&philo->philo_mutex, &philo->full, true);
 			break ;
 		}
+		thinking(philo, table);
 		eating(philo, table);
 		sleeping(philo, table);
-		thinking(philo, table);
 	}
 	return (NULL);
 }

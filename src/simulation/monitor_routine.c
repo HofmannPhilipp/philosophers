@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:26:12 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 13:01:01 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:37:18 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	*monitor_routine(void *arg)
 
 	table = (t_table *)arg;
 	increase_threads_ready(table);
+	set_long(&table->table_mutex, &table->start_time, get_time());
 	num_philo = get_long(&table->table_mutex, &table->data->num_philo);
 	wait_all_threads(table);
 	while (!is_simulation_finished(table))
