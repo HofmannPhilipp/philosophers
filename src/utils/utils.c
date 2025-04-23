@@ -6,22 +6,28 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 13:25:19 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:13:05 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_status(t_philo *philo, long ms, char *status)
+void	print_status(t_philo *philo, char *status)
 {
 	t_table	*table;
+	long	start_time;
 
 	table = philo->table;
-	if (get_bool(&philo->philo_mutex, &philo->full)
+	if (get_bool(&philo->philo_full_mutex, &philo->full)
 		|| is_simulation_finished(philo->table))
 		return ;
 	pthread_mutex_lock(&table->print_mutex);
-	printf("%ld %d %s\n", ms, philo->id, status);
+	if (!get_bool(&philo->philo_mutex, &philo->full)
+		&& !is_simulation_finished(philo->table))
+	{
+		start_time = get_long(&table->start_time_mutex, &table->start_time);
+		printf("%ld %d %s\n", get_elapsed_time(start_time), philo->id, status);
+	}
 	pthread_mutex_unlock(&table->print_mutex);
 }
 

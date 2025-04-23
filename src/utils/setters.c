@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:05:32 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 13:22:53 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:11:44 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	set_long(pthread_mutex_t *mutex, long *ptr, long new_value)
 
 void	increase_threads_ready(t_table *table)
 {
-	pthread_mutex_lock(&table->table_mutex);
-	table->num_threads_ready++;
-	pthread_mutex_unlock(&table->table_mutex);
+	pthread_mutex_lock(&table->table_data_mutex);
+	table->num_threads_running++;
+	pthread_mutex_unlock(&table->table_data_mutex);
 }

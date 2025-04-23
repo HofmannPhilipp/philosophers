@@ -6,20 +6,20 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 13:15:41 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 15:06:22 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:11:31 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	thinking(t_philo *philo, t_table *table)
+static void	thinking(t_philo *philo)
 {
-	print_status(philo, get_elapsed_time(table->start_time), THINK);
+	print_status(philo, THINK);
 }
 
 static void	sleeping(t_philo *philo, t_table *table)
 {
-	print_status(philo, get_elapsed_time(table->start_time), SLEEP);
+	print_status(philo, SLEEP);
 	usleep_plus(table->data->sleep_time, table);
 }
 
@@ -31,22 +31,23 @@ void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	table = philo->table;
 	increase_threads_ready(table);
-	if (get_long(&table->table_mutex, &table->data->num_philo) == 1)
+	wait_all_threads(table);
+	while (!get_bool(&table->simulation_mutex, &table->simulation_start))
+		;
+	if (get_long(&table->table_data_mutex, &table->data->num_philo) == 1)
 	{
 		one_philo(philo, table);
 		return (NULL);
 	}
-	wait_all_threads(table);
+	if (philo->id % 2 == 0)
+		usleep(100);
 	while (!is_simulation_finished(table))
 	{
 		if (is_full(philo, table))
-		{
-			set_bool(&philo->philo_mutex, &philo->full, true);
 			break ;
-		}
-		thinking(philo, table);
 		eating(philo, table);
 		sleeping(philo, table);
+		thinking(philo);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 10:52:26 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 13:54:29 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:07:40 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,17 @@ bool	init_table(t_table *table, t_data *data)
 		printf("Failed to init print mutex\n");
 		return (1);
 	}
-	if (pthread_mutex_init(&table->table_mutex, NULL) != 0)
+	if (pthread_mutex_init(&table->table_data_mutex, NULL) != 0)
+	{
+		printf("Failed to init table mutex\n");
+		return (false);
+	}
+	if (pthread_mutex_init(&table->simulation_mutex, NULL) != 0)
+	{
+		printf("Failed to init table mutex\n");
+		return (false);
+	}
+	if (pthread_mutex_init(&table->start_time_mutex, NULL) != 0)
 	{
 		printf("Failed to init table mutex\n");
 		return (false);
@@ -37,6 +47,8 @@ t_philo	*create_philo(int id, t_table *table)
 	memset(philo, 0, sizeof(t_philo));
 	pthread_mutex_init(&philo->l_fork_mutex, NULL);
 	pthread_mutex_init(&philo->philo_mutex, NULL);
+	pthread_mutex_init(&philo->last_meal_time_mutex, NULL);
+	pthread_mutex_init(&philo->philo_full_mutex, NULL);
 	philo->id = id + 1;
 	philo->table = table;
 	return (philo);

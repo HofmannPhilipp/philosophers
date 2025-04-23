@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:16:10 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/22 15:31:19 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:16:16 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,8 @@ static void	create_all_threads(t_philo **philos, t_table *table)
 
 	i = 0;
 	start_time = get_time();
-	set_long(&table->table_mutex, &table->start_time, start_time);
 	while (i < table->data->num_philo)
 	{
-		set_long(&philos[i]->philo_mutex, &philos[i]->last_meal_time,
-			start_time);
 		pthread_create(&philos[i]->thread, NULL, &philo_routine, philos[i]);
 		i++;
 	}
@@ -40,7 +37,7 @@ static void	join_all_threads(t_philo **philos, t_table *table)
 		pthread_join(philos[i]->thread, NULL);
 		i++;
 	}
-	set_bool(&table->table_mutex, &table->simulation_finished, true);
+	set_bool(&table->simulation_mutex, &table->simulation_finished, true);
 	pthread_join(table->monitor, NULL);
 }
 
@@ -50,15 +47,19 @@ static void	destroy_all_mutex(t_philo **philos, t_table *table)
 	long	num_philo;
 
 	i = 0;
-	num_philo = get_long(&table->table_mutex, &table->data->num_philo);
+	num_philo = table->data->num_philo;
 	while (i < num_philo)
 	{
 		pthread_mutex_destroy(&philos[i]->l_fork_mutex);
 		pthread_mutex_destroy(&philos[i]->philo_mutex);
+		pthread_mutex_destroy(&philos[i]->philo_full_mutex);
+		pthread_mutex_destroy(&philos[i]->last_meal_time_mutex);
 		i++;
 	}
 	pthread_mutex_destroy(&table->print_mutex);
-	pthread_mutex_destroy(&table->table_mutex);
+	pthread_mutex_destroy(&table->table_data_mutex);
+	pthread_mutex_destroy(&table->simulation_mutex);
+	pthread_mutex_destroy(&table->start_time_mutex);
 }
 
 void	start_simulation(t_philo **philos, t_table *table)
