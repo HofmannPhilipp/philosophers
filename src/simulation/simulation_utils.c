@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:27:58 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/23 19:13:36 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:15:24 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ void	wait_all_threads(t_table *table)
 {
 	long	total_threads;
 
-	total_threads = get_long(&table->table_data_mutex, &table->data->num_philo) + 1;
-	while ((get_long(&table->table_data_mutex, &table->num_threads_running) < total_threads))
-			usleep(100);
+	total_threads = get_long(&table->table_data_mutex, &table->data->num_philo)
+		+ 1;
+	while ((get_long(&table->table_data_mutex,
+				&table->num_threads_running) < total_threads))
+		usleep(100);
 }
 
 bool	is_dead(t_philo *philo, t_table *table)
@@ -28,7 +30,8 @@ bool	is_dead(t_philo *philo, t_table *table)
 
 	if (get_bool(&philo->philo_mutex, &philo->full))
 		return (false);
-	last_meal_time = get_long(&philo->last_meal_time_mutex, &philo->last_meal_time);
+	last_meal_time = get_long(&philo->last_meal_time_mutex,
+			&philo->last_meal_time);
 	die_time = get_long(&table->table_data_mutex, &table->data->die_time);
 	if (get_elapsed_time(last_meal_time) > die_time)
 		return (true);
@@ -49,23 +52,13 @@ bool	is_full(t_philo *philo, t_table *table)
 	return (false);
 }
 
-void	usleep_plus(long duration, t_table *table)
+void	usleep_plus(long duration)
 {
 	long	start;
-	long	rem;
 
 	start = get_time();
-	while (get_elapsed_time(start) < duration)
-	{
-		if (is_simulation_finished(table))
-			break ;
-		rem = duration - get_elapsed_time(start);
-		if (rem > 1000)
-			usleep((rem / 2) * 1000);
-		else
-			while (get_elapsed_time(start) < duration)
-				;
-	}
+	while ((get_time() - start) < duration)
+		usleep(500);
 }
 
 void	one_philo(t_philo *philo, t_table *table)
@@ -76,6 +69,7 @@ void	one_philo(t_philo *philo, t_table *table)
 	while (!is_simulation_finished(table))
 		usleep(200);
 }
+
 void	set_start_time(t_table *table)
 {
 	int		i;
@@ -88,7 +82,8 @@ void	set_start_time(t_table *table)
 	while (i < num_philo)
 	{
 		philo = table->philos[i];
-		set_long(&philo->last_meal_time_mutex, &philo->last_meal_time, get_time());
+		set_long(&philo->last_meal_time_mutex, &philo->last_meal_time,
+			get_time());
 		i++;
 	}
 	set_bool(&table->simulation_mutex, &table->simulation_start, true);

@@ -4,7 +4,9 @@ CFLAGS = -Werror -Wextra -Wall -I./include
 DEBUG_FLAGS = -Werror -Wextra -Wall -I./include -fsanitize=address -g
 SRC_DIR = ./src
 VPATH = $(SRC_DIR) $(SRC_DIR)/utils $(SRC_DIR)/simulation
-SRCS = main.c utils.c init.c ft_atol.c eat.c parse.c getters.c setters.c simulation.c philo_routine.c monitor_routine.c simulation_utils.c
+SRCS =	main.c utils.c init.c ft_atol.c eat.c parse.c getters.c setters.c \
+		simulation.c philo_routine.c monitor_routine.c simulation_utils.c \
+		mutex_utils.c
 OBJS_DIR = objects
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 

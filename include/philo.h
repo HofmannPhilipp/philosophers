@@ -6,13 +6,14 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/23 19:05:59 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:45:26 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <errno.h>
 # include <limits.h>
 # include <pthread.h>
 # include <stdbool.h>
@@ -44,16 +45,16 @@ typedef struct s_data
 typedef struct s_table
 {
 	t_data			*data;
-	bool			simulation_finished;
 	long			start_time;
-	bool			simulation_start;
 	long			num_threads_running;
+	bool			simulation_start;
+	bool			simulation_finished;
 	pthread_t		monitor;
 	struct s_philo	**philos;
-	pthread_mutex_t	start_time_mutex;
-	pthread_mutex_t	simulation_mutex;
-	pthread_mutex_t	table_data_mutex;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	table_data_mutex;
+	pthread_mutex_t	simulation_mutex;
+	pthread_mutex_t	start_time_mutex;
 }					t_table;
 
 typedef struct s_philo
@@ -74,7 +75,7 @@ typedef struct s_philo
 //init
 bool				init_table(t_table *table, t_data *data);
 t_philo				*create_philo(int id, t_table *table);
-t_philo				**init_philos_arr(t_table *table);
+t_philo				**create_philos_arr(t_table *table);
 
 //simulation
 void				start_simulation(t_philo **philos, t_table *table);
@@ -87,7 +88,7 @@ void				wait_all_threads(t_table *table);
 void				set_start_time(t_table *table);
 bool				is_dead(t_philo *philo, t_table *table);
 bool				is_full(t_philo *philo, t_table *table);
-void				usleep_plus(long duration, t_table *table);
+void				usleep_plus(long duration);
 void				one_philo(t_philo *philo, t_table *table);
 
 //parse
@@ -111,4 +112,8 @@ void				print_usage_error(void);
 void				free_philos_arr(t_philo **philos, int length);
 long				ft_atol(const char *str);
 
+//mutex_utils
+bool				create_mutex(pthread_mutex_t *mutex);
+void				destroy_all_mutex(t_philo **philos, t_table *table,
+						long size);
 #endif

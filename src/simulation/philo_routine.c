@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 13:15:41 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/23 19:11:31 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:13:50 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	thinking(t_philo *philo)
 static void	sleeping(t_philo *philo, t_table *table)
 {
 	print_status(philo, SLEEP);
-	usleep_plus(table->data->sleep_time, table);
+	usleep_plus(table->data->sleep_time);
 }
 
 void	*philo_routine(void *arg)

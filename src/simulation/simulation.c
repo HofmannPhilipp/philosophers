@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:16:10 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/23 19:16:16 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:14:39 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,21 @@
 
 static void	create_all_threads(t_philo **philos, t_table *table)
 {
-	int		i;
-	long	start_time;
+	int	i;
 
 	i = 0;
-	start_time = get_time();
 	while (i < table->data->num_philo)
 	{
-		pthread_create(&philos[i]->thread, NULL, &philo_routine, philos[i]);
+		if (pthread_create(&philos[i]->thread, NULL, &philo_routine,
+				philos[i]) != 0)
+		{
+			printf("Error: Failed to create Philo Thread %d\n", i);
+			break ;
+		}
 		i++;
 	}
-	pthread_create(&table->monitor, NULL, &monitor_routine, table);
+	if (pthread_create(&table->monitor, NULL, &monitor_routine, table) != 0)
+		printf("Error: Failed to create Monitor Thread %d\n", i);
 }
 
 static void	join_all_threads(t_philo **philos, t_table *table)
@@ -41,30 +45,9 @@ static void	join_all_threads(t_philo **philos, t_table *table)
 	pthread_join(table->monitor, NULL);
 }
 
-static void	destroy_all_mutex(t_philo **philos, t_table *table)
-{
-	int		i;
-	long	num_philo;
-
-	i = 0;
-	num_philo = table->data->num_philo;
-	while (i < num_philo)
-	{
-		pthread_mutex_destroy(&philos[i]->l_fork_mutex);
-		pthread_mutex_destroy(&philos[i]->philo_mutex);
-		pthread_mutex_destroy(&philos[i]->philo_full_mutex);
-		pthread_mutex_destroy(&philos[i]->last_meal_time_mutex);
-		i++;
-	}
-	pthread_mutex_destroy(&table->print_mutex);
-	pthread_mutex_destroy(&table->table_data_mutex);
-	pthread_mutex_destroy(&table->simulation_mutex);
-	pthread_mutex_destroy(&table->start_time_mutex);
-}
-
 void	start_simulation(t_philo **philos, t_table *table)
 {
 	create_all_threads(philos, table);
 	join_all_threads(philos, table);
-	destroy_all_mutex(philos, table);
+	destroy_all_mutex(philos, table, table->data->num_philo);
 }

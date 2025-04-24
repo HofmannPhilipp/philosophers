@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:26:12 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/23 19:16:38 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:11:27 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static bool	observe_philosophers(t_table *table, long num_philo)
 		if (is_dead(philo, table))
 		{
 			print_status(philo, DEAD);
-			set_bool(&table->simulation_mutex, &table->simulation_finished, true);
+			set_bool(&table->simulation_mutex,
+				&table->simulation_finished, true);
 			return (true);
 		}
 		i++;
@@ -37,11 +38,11 @@ void	*monitor_routine(void *arg)
 {
 	t_table	*table;
 	long	num_philo;
-	
+
 	table = (t_table *)arg;
-	set_start_time(table);
 	increase_threads_ready(table);
 	wait_all_threads(table);
+	set_start_time(table);
 	num_philo = get_long(&table->table_data_mutex, &table->data->num_philo);
 	while (!is_simulation_finished(table))
 	{
