@@ -6,11 +6,17 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 13:15:41 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 16:13:50 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:59:21 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	wait_simulation_start(t_table *table)
+{
+	while (!get_bool(&table->simulation_mutex, &table->simulation_start))
+		;
+}
 
 static void	thinking(t_philo *philo)
 {
@@ -30,10 +36,8 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	increase_threads_ready(table);
-	wait_all_threads(table);
-	while (!get_bool(&table->simulation_mutex, &table->simulation_start))
-		;
+	increment_threads_running(table);
+	wait_simulation_start(table);
 	if (get_long(&table->table_data_mutex, &table->data->num_philo) == 1)
 	{
 		one_philo(philo, table);

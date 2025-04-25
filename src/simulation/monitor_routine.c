@@ -6,11 +6,30 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:26:12 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 16:11:27 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:56:32 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	start_simulation_clock(t_table *table)
+{
+	int		i;
+	t_philo	*philo;
+	long	num_philo;
+
+	num_philo = get_long(&table->table_data_mutex, &table->data->num_philo);
+	i = 0;
+	set_long(&table->start_time_mutex, &table->start_time, get_time());
+	while (i < num_philo)
+	{
+		philo = table->philos[i];
+		set_long(&philo->last_meal_time_mutex, &philo->last_meal_time,
+			get_time());
+		i++;
+	}
+	set_bool(&table->simulation_mutex, &table->simulation_start, true);
+}
 
 static bool	observe_philosophers(t_table *table, long num_philo)
 {
@@ -40,9 +59,9 @@ void	*monitor_routine(void *arg)
 	long	num_philo;
 
 	table = (t_table *)arg;
-	increase_threads_ready(table);
+	increment_threads_running(table);
 	wait_all_threads(table);
-	set_start_time(table);
+	start_simulation_clock(table);
 	num_philo = get_long(&table->table_data_mutex, &table->data->num_philo);
 	while (!is_simulation_finished(table))
 	{

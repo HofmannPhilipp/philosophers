@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 15:45:26 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:55:18 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ bool				parse_input(t_data *data, char *argv[]);
 //setters
 void				set_bool(pthread_mutex_t *mutex, bool *ptr, bool new_value);
 void				set_long(pthread_mutex_t *mutex, long *ptr, long new_value);
-void				increase_threads_ready(t_table *table);
+void				increment_threads_running(t_table *table);
 
 //getters
 bool				get_bool(pthread_mutex_t *mutex, bool *ptr);

@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:27:58 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 16:15:24 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:55:59 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,23 +68,4 @@ void	one_philo(t_philo *philo, t_table *table)
 	pthread_mutex_unlock(&philo->l_fork_mutex);
 	while (!is_simulation_finished(table))
 		usleep(200);
-}
-
-void	set_start_time(t_table *table)
-{
-	int		i;
-	t_philo	*philo;
-	long	num_philo;
-
-	num_philo = get_long(&table->table_data_mutex, &table->data->num_philo);
-	i = 0;
-	set_long(&table->start_time_mutex, &table->start_time, get_time());
-	while (i < num_philo)
-	{
-		philo = table->philos[i];
-		set_long(&philo->last_meal_time_mutex, &philo->last_meal_time,
-			get_time());
-		i++;
-	}
-	set_bool(&table->simulation_mutex, &table->simulation_start, true);
 }
