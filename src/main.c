@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:15 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 10:08:40 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:35:58 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	main(int argc, char *argv[])
 	philos = create_philos_arr(&table);
 	if (!philos)
 		return (EXIT_FAILURE);
-	table.philos = philos;
 	start_simulation(philos, &table);
 	free_philos_arr(philos, table.data->num_philo);
 	return (EXIT_SUCCESS);

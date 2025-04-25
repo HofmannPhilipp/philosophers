@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 10:52:26 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/25 10:21:31 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:47:12 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ t_philo	*create_philo(int id, t_table *table)
 
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
+	{
+		printf("Error: Failed malloc philo\n");
 		return (NULL);
+	}
 	memset(philo, 0, sizeof(t_philo));
 	if (!create_mutex(&philo->philo_mutex))
 		return (NULL);
@@ -44,7 +47,7 @@ t_philo	*create_philo(int id, t_table *table)
 		return (NULL);
 	if (!create_mutex(&philo->l_fork_mutex))
 		return (NULL);
-	philo->id = id + 1;
+	philo->id = id;
 	philo->table = table;
 	philo->philo_thread_created = true;
 	return (philo);
@@ -77,13 +80,14 @@ t_philo	**create_philos_arr(t_table *table)
 	philos_arr = malloc(sizeof(t_philo *) * (table->data->num_philo));
 	if (!philos_arr)
 	{
-		printf("Failed malloc philos_arr\n");
+		printf("Error: Failed malloc philos_arr\n");
 		return (NULL);
 	}
-	i = 0;
-	while (i < table->data->num_philo)
+	table->philos = philos_arr;
+	i = -1;
+	while (++i < table->data->num_philo)
 	{
-		philo = create_philo(i, table);
+		philo = create_philo(i + 1, table);
 		if (!philo)
 		{
 			destroy_all_mutex(table, i);
@@ -91,7 +95,6 @@ t_philo	**create_philos_arr(t_table *table)
 			return (NULL);
 		}
 		philos_arr[i] = philo;
-		i++;
 	}
 	init_right_forks(philos_arr, table);
 	return (philos_arr);

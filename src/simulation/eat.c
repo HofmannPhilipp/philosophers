@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:50:53 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 16:10:44 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:48:18 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ static void	take_forks(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->l_fork_mutex);
-		print_status(philo, L_FORK);
+		print_status(philo, FORK);
 		pthread_mutex_lock(philo->r_fork_mutex);
-		print_status(philo, R_FORK);
+		print_status(philo, FORK);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->r_fork_mutex);
-		print_status(philo, R_FORK);
+		print_status(philo, FORK);
 		pthread_mutex_lock(&philo->l_fork_mutex);
-		print_status(philo, L_FORK);
+		print_status(philo, FORK);
 	}
 }
 
