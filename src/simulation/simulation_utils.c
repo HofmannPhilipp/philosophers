@@ -6,22 +6,22 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:27:58 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/25 09:55:59 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:29:46 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	wait_all_threads(t_table *table)
-{
-	long	total_threads;
+// void	wait_all_threads(t_table *table)
+// {
+// 	long	total_threads;
 
-	total_threads = get_long(&table->table_data_mutex, &table->data->num_philo)
-		+ 1;
-	while ((get_long(&table->table_data_mutex,
-				&table->num_threads_running) < total_threads))
-		usleep(100);
-}
+// 	total_threads = get_long(&table->table_data_mutex, &table->data->num_philo)
+// 		+ 1;
+// 	while ((get_long(&table->table_data_mutex,
+// 				&table->num_threads_running) < total_threads))
+// 		usleep(100);
+// }
 
 bool	is_dead(t_philo *philo, t_table *table)
 {

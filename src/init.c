@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 10:52:26 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/24 15:47:04 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:21:31 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ bool	init_table(t_table *table, t_data *data)
 {
 	memset(table, 0, sizeof(t_table));
 	table->data = data;
+	table->monitor_thread_created = true;
 	if (!create_mutex(&table->table_data_mutex))
 		return (false);
 	if (!create_mutex(&table->simulation_mutex))
@@ -32,6 +33,8 @@ t_philo	*create_philo(int id, t_table *table)
 	t_philo	*philo;
 
 	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		return (NULL);
 	memset(philo, 0, sizeof(t_philo));
 	if (!create_mutex(&philo->philo_mutex))
 		return (NULL);
@@ -43,6 +46,7 @@ t_philo	*create_philo(int id, t_table *table)
 		return (NULL);
 	philo->id = id + 1;
 	philo->table = table;
+	philo->philo_thread_created = true;
 	return (philo);
 }
 
@@ -82,7 +86,7 @@ t_philo	**create_philos_arr(t_table *table)
 		philo = create_philo(i, table);
 		if (!philo)
 		{
-			destroy_all_mutex(philos_arr, table, i);
+			destroy_all_mutex(table, i);
 			free_philos_arr(philos_arr, i);
 			return (NULL);
 		}

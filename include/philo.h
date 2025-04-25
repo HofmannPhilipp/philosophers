@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:50:30 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/25 09:55:18 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:18:31 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_data
 typedef struct s_table
 {
 	t_data			*data;
+	bool			monitor_thread_created;
 	long			start_time;
 	long			num_threads_running;
 	bool			simulation_start;
@@ -64,6 +65,7 @@ typedef struct s_philo
 	long			last_meal_time;
 	long			meals_eaten;
 	bool			full;
+	bool			philo_thread_created;
 	pthread_t		thread;
 	pthread_mutex_t	philo_mutex;
 	pthread_mutex_t	philo_full_mutex;
@@ -85,7 +87,6 @@ void				eating(t_philo *philo, t_table *table);
 
 //simulation_utils
 void				wait_all_threads(t_table *table);
-void				set_start_time(t_table *table);
 bool				is_dead(t_philo *philo, t_table *table);
 bool				is_full(t_philo *philo, t_table *table);
 void				usleep_plus(long duration);
@@ -114,6 +115,5 @@ long				ft_atol(const char *str);
 
 //mutex_utils
 bool				create_mutex(pthread_mutex_t *mutex);
-void				destroy_all_mutex(t_philo **philos, t_table *table,
-						long size);
+void				destroy_all_mutex(t_table *table, long length);
 #endif

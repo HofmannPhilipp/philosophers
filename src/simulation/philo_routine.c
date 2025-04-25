@@ -6,17 +6,17 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 13:15:41 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/25 09:59:21 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:31:45 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	wait_simulation_start(t_table *table)
-{
-	while (!get_bool(&table->simulation_mutex, &table->simulation_start))
-		;
-}
+// static void	wait_simulation_start(t_table *table)
+// {
+// 	while (!get_bool(&table->simulation_mutex, &table->simulation_start))
+// 		;
+// }
 
 static void	thinking(t_philo *philo)
 {
@@ -36,15 +36,13 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	increment_threads_running(table);
-	wait_simulation_start(table);
 	if (get_long(&table->table_data_mutex, &table->data->num_philo) == 1)
 	{
 		one_philo(philo, table);
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(100);
+		usleep(200);
 	while (!is_simulation_finished(table))
 	{
 		if (is_full(philo, table))

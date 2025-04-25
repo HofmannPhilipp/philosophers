@@ -6,7 +6,7 @@
 /*   By: phhofman <phhofman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:00:05 by phhofman          #+#    #+#             */
-/*   Updated: 2025/04/23 19:13:05 by phhofman         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:05:12 by phhofman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	free_philos_arr(t_philo **philos, int length)
 	while (i < length)
 	{
 		free(philos[i]);
+		philos[i] = NULL;
 		i++;
 	}
 	free(philos);
